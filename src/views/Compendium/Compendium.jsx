@@ -37,17 +37,19 @@ export default function Compendium() {
   useEffect(() => {
     async function getFilteredPokemon() {
       if (!selectedType) return;
-      setLoading(true);
 
       if (selectedType !== 'all') {
+        setLoading(true);
         const filteredPokemon = await fetchFilteredPokemon(selectedType);
         setPokemons(filteredPokemon);
       } else {
-        const pokemonList = await fetchPokemon();
-        setPokemons(pokemonList);
+        if(!loading) {
+          setLoading(true);
+          const pokemonList = await fetchPokemon();
+          setPokemons(pokemonList);
+        }
       }
       setLoading(false);
-      //setSort('');
     }
 
     getFilteredPokemon();
@@ -64,9 +66,9 @@ export default function Compendium() {
         console.log(error);
       })
       .finally(() => {
-        setLoading(false);
         setSearchName('');
         setSelectedType('all');
+        setLoading(false);
       });
   };
 
